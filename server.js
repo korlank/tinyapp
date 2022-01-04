@@ -14,19 +14,24 @@ const { generateRandomString, urlsForUser } = require('./helpers');
 
 // PG database client/connection setup
 const { Pool } = require('pg');
-let dbParams = {};
-if (process.env.DATABASE_URL) {
-  dbParams.connectionString = process.env.DATABASE_URL;
-} else {
-  dbParams = {
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME
-  };
+
+const devConfig = {
+  user: process.env.PGUSER,
+  password: process.env.PGPASSWORD,
+  host: process.env.PGHOST,
+  port: process.env.PGPORT,
+  database: process.env.PGDATABASE
 };
-const db = new Pool(dbParams);
+
+const proConfig = {
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+};
+
+const db = new Pool(process.env.NODE_ENV === "production" ? proConfig : devConfig);
+
 db.connect();
 
 // middlewares 
