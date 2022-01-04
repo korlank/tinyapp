@@ -72,8 +72,8 @@ app.get("/demo", (req, res) => {
   }
   res.render("urls_new", templateVars)
   }).catch(err => {
-    console.log(err)
-    return res.redirect('/login')
+    res.send(error)
+    // return res.redirect('/login')
   });
 })
 
